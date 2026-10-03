@@ -1,0 +1,37 @@
+name: Monthly area data update
+
+# Rebuilds AreaData.json from HUD + Census on the 2nd of every month. Most months nothing upstream
+# has changed, the output is byte-identical, and nothing is committed. New loan limits (Nov/Dec)
+# and new ACS medians (Dec) get picked up automatically; the app downloads them within 30 days.
+on:
+  schedule:
+    - cron: "17 9 2 * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build
+        run: python3 build_area_data.py --out .
+
+      - name: Commit if changed
+        run: |
+          if git diff --quiet -- AreaData.json manifest.json; then
+            echo "No upstream changes this month."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git add AreaData.json manifest.json
+          git commit -m "Area data update $(date -u +%Y-%m-%d)"
+          git push
