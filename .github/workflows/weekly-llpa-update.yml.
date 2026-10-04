@@ -1,0 +1,42 @@
+name: Weekly LLPA data update
+
+# Rebuilds LLPAData.json from Freddie Mac's Exhibit 19 (Credit Fees) every Monday. Freddie only
+# re-issues the exhibit when a bulletin changes the grids, so most weeks the output is
+# byte-identical and nothing is committed. If the PDF layout ever changes in a way the parser
+# doesn't recognize, validation fails, the job goes red, and nothing is published — the app keeps
+# its last good copy.
+on:
+  schedule:
+    - cron: "41 8 * * 1"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install parser
+        run: pip install pdfplumber
+
+      - name: Build
+        run: python3 build_llpa_data.py --out .
+
+      - name: Commit if changed
+        run: |
+          if git diff --quiet -- LLPAData.json llpa-manifest.json; then
+            echo "No new Exhibit 19 this week."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git add LLPAData.json llpa-manifest.json
+          git commit -m "LLPA data update $(date -u +%Y-%m-%d)"
+          git push
