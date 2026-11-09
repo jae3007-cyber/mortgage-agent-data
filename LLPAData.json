@@ -1,13 +1,6 @@
 {
  "attributes": {
   "cashOut": {
-   "altFico": [
-    0.25,
-    0.25,
-    0.25,
-    0.25,
-    0.25
-   ],
    "arm": [
     0.0,
     0.0,
@@ -73,17 +66,6 @@
    ]
   },
   "limitedCashOut": {
-   "altFico": [
-    0.0,
-    0.25,
-    0.25,
-    0.25,
-    0.25,
-    0.25,
-    0.25,
-    0.25,
-    0.25
-   ],
    "arm": [
     0.0,
     0.0,
@@ -185,17 +167,6 @@
    ]
   },
   "purchase": {
-   "altFico": [
-    0.0,
-    0.25,
-    0.25,
-    0.25,
-    0.25,
-    0.25,
-    0.25,
-    0.25,
-    0.25
-   ],
    "arm": [
     0.0,
     0.0,
@@ -297,8 +268,8 @@
    ]
   }
  },
- "bulletin": "2026-K",
- "effectiveDate": "09/30/2026",
+ "bulletin": "2026-A",
+ "effectiveDate": "11/04/2026",
  "grids": {
   "cashOut": [
    [
@@ -570,5 +541,5 @@
  },
  "note": "Fannie Mae's LLPA matrix matches these grids (FHFA-aligned since 2023), but Fannie's site blocks automated download, so Fannie is not read directly.",
  "schema": 1,
- "source": "Freddie Mac Exhibit 19, Guide Bulletin 2026-K"
+ "source": "Freddie Mac Exhibit 19, Guide Bulletin 2026-A"
 }
